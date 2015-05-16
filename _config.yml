@@ -8,7 +8,7 @@ highlighter: pygments
 # Themes are encouraged to use these universal variables 
 # so be sure to set them if your theme uses them.
 #
-title : Technology Tidbits
+title : My Lantern
 author :
   name : rahulsh1
   email : ""
@@ -16,8 +16,8 @@ author :
   twitter : nil
   feedburner : nil
 
-production_url : ""
-#production_url : http://rahulsh1.github.io
+#production_url : ""
+production_url : http://rahulsh1.github.io
 
 safe: true
 # Tell Github to use the kramdown markdown interpreter
@@ -54,8 +54,8 @@ JB :
   #   - Only the following values are falsy: ["", null, false]
   #   - When setting BASE_PATH it must be a valid url.
   #     This means always setting the protocol (http|https) or prefixing with "/"
-  BASE_PATH : ""
-  #BASE_PATH : http://rahulsh1.github.io
+  #BASE_PATH : ""
+  BASE_PATH : http://rahulsh1.github.io
   
   # By default, the asset_path is automatically defined relative to BASE_PATH plus the enabled theme.
   # ex: [BASE_PATH]/assets/themes/[THEME-NAME]
@@ -81,14 +81,14 @@ JB :
   # Set 'provider' to false to turn commenting off globally.
   #
   comments :
-    provider : false
+    provider : disqus
    
   # Settings for analytics helper
   # Set 'provider' to the analytics provider you want to use.
   # Set 'provider' to false to turn analytics off globally.
   #        
   analytics :
-    provider : false
+    provider : google
 
   # Settings for sharing helper. 
   # Sharing is for things like tweet, plusone, like, reddit buttons etc.
