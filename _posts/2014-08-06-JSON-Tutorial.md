@@ -10,7 +10,7 @@ published: true
 summary: A quick primer on JSON APIs
 ---
 
-JSON data format is widely used nowadays. In order to use it with Java, several libraries are available.
+JSON data format is widely used nowadays. In order to use it with Java, several libraries are available. In this blog post, we will take a look at handling JSON data using the [org.json](http://www.json.org/java/index.html) library.
 
  - [json.simple](http://code.google.com/p/json-simple)
  - [Gson](http://code.google.com/p/google-gson)
