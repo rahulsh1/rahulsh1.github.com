@@ -1,0 +1,80 @@
+
+Part - I
+****************************************
+- define an Interface
+
+- define an Abstract class
+
+- Inner Class
+
+- static Inner class
+
+- private members
+- protected members
+
+- private methods
+- protected members
+
+Part - II
+****************************************
+- static members
+
+- final 
+
+- Singleton
+
+- Generics
+
+- Collections
+	HashMap   NSDictionary
+	HashSet 
+	ArrayList NSArray, NSMutableArray
+
+- String 
+	 concat
+	 indexOf
+	 substring
+ 
+Part - III
+****************************************
+- Threads
+
+- Exceptions
+
+- null vs nil
+
+- Garbage collection
+
+
+
+Others:
+Best practices
+ - Use non-atomic whereever  as the default property is atomic
+ - 
+
+- ObjC features and their resemblance to Java
+- Protocols : Interface to comply with
+- Extensions: Add private methods to a class or allow readwrite properties only within the class but readonly to other objects
+- Blocks    : Function pointers/closures
+- 
+
+
+Extra:
+
+
+Appendix:
+1. http://code.tutsplus.com/series/learn-objective-c--mobile-22891
+2. 
+3. 
+
+Coming from a Java background with some prior experience in both C and C++, I personlly thought the curve to learn
+the new concepts and syntax with Objective-C was a bit steep.
+I was in no mood to master Objective-C but was looking for a quick way to convert some Java libraries into Objective-C.
+There are plenty of articles around but a lot of them carry dated materials but it was hard for me to find really good code
+examples with the java reference in mind. 
+As I put myself through the transition and learnt things the hard way. Hopefully this article makes it easier for people out
+there. Note its very possible that contents of this article get outdated too.
+Note this is not a Objective-C tutorial and it would be good if you are already familiar with some of the concepts and syntax of Obj-C.
+See links in the Appendix for some tutorials on Objective-C
+
+
