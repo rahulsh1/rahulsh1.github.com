@@ -27,8 +27,8 @@ Come `Docker` :whale: Docker addresses most of these problems quite beautifully 
 Docker is a container virtualization technology. It is a form of light weight container that allows you to run within a host operating system.
 Unlike Virtual machines, you don't package a complete Guest operating system with it. There is a thin layer however that allows you to run your application
 in an isolated manner over your choice of linux operating system that runs on top of the Host operating system. You can easily run several such 
-containers on the Host Operating system. Since Docker uses underlying features(covered later) of an `Linux` operating system :anchor:
-the container needs to have **Linux as their host operating system**. 
+containers on the Host Operating system. Since Docker uses underlying features(covered later) of an Linux operating system, 
+the container needs to have **Linux as their host operating system**. :anchor:
 
 In a nutshell: :sparkles:
 
@@ -142,6 +142,9 @@ Docker commands needs to be run as root(sudo) or you can add the user to the `do
     # Usage: sudo docker commit [container ID] [image name]:[tag/version - default latest]
     $ sudo docker commit 8dbd9e392a96 my_new_img:v2
 
+
+:flashlight:
+
 #### Underlying Technology
 Docker utilizes several linux features under the hood. These are:
 
@@ -164,12 +167,13 @@ If you are using Windows or Mac, you can use `Boot2Docker`. Boot2Docker is compo
  - Docker and 
  - Boot2Docker management tool (Lightweight Linux VM)
 
+:pushpin:
 
 #### New Tools with Docker
 
 ##### Compose 
 There used to be a tool called [fig](http://www.fig.sh/) which allowed you to manage Docker containers using a single file.
-Its now replaced with inbuilt tool called `Compose`.
+Its now replaced with inbuilt tool called `Compose`. :bookmark:
 
 Compose allows you to specify your entire application in a single `yml` file which could be composed of multiple containers.
 You can expose the correct port and create links between the containers in this file.
@@ -209,7 +213,7 @@ Commands:
 
 ##### Swarm 
 Currently, if you run your containers across multiple hosts, most create their own customized shell script to manage cluster of Docker nodes.
-Instead now you could use `Swarm`. It is a native clustering tool for Docker. It allows your to manage your Docker nodes as a single virtual host.
+Instead now you could use `Swarm`. :bookmark: It is a native clustering tool for Docker. It allows your to manage your Docker nodes as a single virtual host.
 
 It supports the following in a nutshell:
 
