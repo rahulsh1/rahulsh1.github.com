@@ -2,3 +2,5 @@
 */out/
 _site
 TODO.md
+*/old/
+*.bat

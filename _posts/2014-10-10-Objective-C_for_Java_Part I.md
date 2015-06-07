@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Objective-C for Java Part I
+title: Objective-C for Java - Part I
 category: tech
 tags: Obj-C Objective-C to Java
 year: 2014
