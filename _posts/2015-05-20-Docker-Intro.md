@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Docker Introduction and Tools
+title: Introduction to Docker
 category: tech
 tags: docker
 year: 2015
@@ -16,9 +16,9 @@ running on the system or ports being consumed by someone else or inconsistent li
 to create this heavy-weight Virtual machine that packages an entire Guest operating system with it. Due to its heavy weight nature, it was really
 cumbersome to distribute this 10GB+ file. There was no good way to automate the complete configuration. Also the Host you would run this on needs to 
 be powerful enough(RAM ~ 8GB+) to be able to run this Virtual machine which often was a challenge given the kind of laptops most field folks carry.
-Running several such instance of VMs was impossible given the limited compute capacity of the host OS. Come `Docker` :whale:
+Running several such instance of VMs was impossible given the limited compute capacity of the host OS. 
 
-Docker addresses most of these problems quite beautifully and also the developers can no more close bugs by simply saying "It works on my machine" !! 
+Come `Docker` :whale: Docker addresses most of these problems quite beautifully and also the developers can no more close bugs by simply saying "It works on my machine" :stuck_out_tongue:
 
 <center><img src="/assets/img/docker.png"></center>
 
@@ -27,10 +27,10 @@ Docker addresses most of these problems quite beautifully and also the developer
 Docker is a container virtualization technology. It is a form of light weight container that allows you to run within a host operating system.
 Unlike Virtual machines, you don't package a complete Guest operating system with it. There is a thin layer however that allows you to run your application
 in an isolated manner over your choice of linux operating system that runs on top of the Host operating system. You can easily run several such 
-containers on the Host Operating system. Since Docker uses underlying features(covered later) of an `Linux` operating system, 
+containers on the Host Operating system. Since Docker uses underlying features(covered later) of an `Linux` operating system :anchor:
 the container needs to have **Linux as their host operating system**. 
 
-In a nutshell:
+In a nutshell: :sparkles:
 
  - Docker provides a platform that enables users to build, package, ship and run distributed applications. 
  - Docker users package up their applications, and any dependent libraries or files, into a Docker image. 
@@ -61,7 +61,7 @@ In a typical `LAMP` application, you can create one or several containers for th
 
 Since container are built in seconds, you can save so much time that now you can spend your time learning something else :golf: :video_game: :surfer:
 
-For installation, refer [link](https://docs.docker.com/installation/)
+:dvd: For installation, refer [link](https://docs.docker.com/installation/)
 
 #### Registry
 You can find most of the Docker images on a public repository hosted at [Docker Hub](https://hub.docker.com/).
@@ -74,7 +74,7 @@ A private registry can also be created and hosted locally in order to serve imag
 #### Basic Operations
 <center><img src="/assets/img/basic.png"></center>
 
-Typically you would perform the following operations:
+:boom: Typically you would perform the following operations:
 
 - Search the Docker Hub or your registry for an existing image. e.g `ubuntu:14.04`
 - Pull the specific image from the registry if not available locally
@@ -141,7 +141,6 @@ Docker commands needs to be run as root(sudo) or you can add the user to the `do
 
     # Usage: sudo docker commit [container ID] [image name]:[tag/version - default latest]
     $ sudo docker commit 8dbd9e392a96 my_new_img:v2
-
 
 #### Underlying Technology
 Docker utilizes several linux features under the hood. These are:
