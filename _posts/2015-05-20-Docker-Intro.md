@@ -106,7 +106,7 @@ Docker commands needs to be run as root(sudo) or you can add the user to the `do
 
     # Usage: docker run <options> [image name] [command to run]
     $ docker run -it cfi_ubuntu:14.04 /bin/bash
-    $ sudo docker run my_img echo "hello"
+    $ docker run my_img echo "hello"
 
 :point_right: List running and non running containers
 
@@ -114,33 +114,38 @@ Docker commands needs to be run as root(sudo) or you can add the user to the `do
 
 :point_right: Run a named container instead of having long IDs
 
-    # Usage: sudo docker run -name [name] [image name] [command]
-    $ sudo docker run -name my_cont_1 my_img echo "hello"
+    # Usage:  docker run -name [name] [image name] [command]
+    $ docker run -name my_cont_1 my_img echo "hello"
 
 :point_right: Run existing container
 
-    # Usage: sudo docker run [container ID]
-    $ sudo docker run c629b7d70666
+    # Usage: docker start [container ID]
+    $ docker start c629b7d70666
 
+:point_right: Attach to running container
+
+    # Usage: docker exec [container ID]
+    $ docker exec -it c629b7d70666 bash
+    
 :point_right: Stop running container
 
-    # Usage: sudo docker stop [container ID]
-    $ sudo docker stop c629b7d70666
+    # Usage: docker stop [container ID]
+    $ docker stop c629b7d70666
 
 :point_right: Delete Container
 
-    # Usage: sudo docker rm [container ID]
-    $ sudo docker rm c629b7d70666
+    # Usage: docker rm [container ID]
+    $ docker rm c629b7d70666
 
 :point_right: Delete Image
 
-    # Usage: sudo docker rm [image ID]
-    $ sudo docker rmi c629b7d70666
+    # Usage: docker rmi [image ID]
+    $ docker rmi c629b7d70666
 
 :point_right: Saving (committing) a container: This command turns your container to an image.
 
-    # Usage: sudo docker commit [container ID] [image name]:[tag/version - default latest]
-    $ sudo docker commit 8dbd9e392a96 my_new_img:v2
+    # Usage: docker commit [container ID] [image name]:[tag/version - default latest]
+    $ docker commit 8dbd9e392a96 my_new_img:v2
 
 
 :flashlight:
