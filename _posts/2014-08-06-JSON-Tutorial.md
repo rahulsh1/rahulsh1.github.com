@@ -23,9 +23,9 @@ We will see how you can use classes from org.json package to build JSON objects 
 <strong>org.json</strong> package is widely used in Android and avoids dependency on other heavyweight packages like Jackson and such.
 Lets dive straight in to some code.
 
-####1. Creating JSON Objects
+#### 1. Creating JSON Objects
 The main class to use here is JSONObject.
-{% highlight java linenos %} 
+{% highlight java %}
 
 JSONObject json = new JSONObject();
 json.put("from", "alice@example.com");
@@ -36,11 +36,11 @@ System.out.println("Output = " + json)
 
 
 :key: Output
-    
+
     {"to":"bob@example.com","from":"alice@example.com","type":"call"}
 
 Another code sample
-{% highlight java linenos %} 
+{% highlight java  %}
 JSONObject json = new JSONObject();
 json.put("from", "alice@example.com");
 json.put("to", "bob@example.com");
@@ -55,13 +55,13 @@ System.out.println("Output = " + json);
 {% endhighlight %}
 
 :key: Output
-	
+
     {"to":"bob@example.com","numParams":3,"params":["v1","v2","v3"],"from":"alice@example.com","type":"call"}
 
-####2. Parsing from JSON in string form
+#### 2. Parsing from JSON in string form
 If we pass the last output given above to the function below, here is how we can extract the values by first converting the string to JSONObject and then invoking the various methods on it.
 We use the class JSONTokener which takes a source string and extracts characters and tokens from it.
-{% highlight java linenos %}
+{% highlight java  %}
 private static void readJSONString(String data) {
   JSONObject json = new JSONObject(new JSONTokener(data));
   String from = json.getString("from");
@@ -77,14 +77,14 @@ private static void readJSONString(String data) {
 }
 {% endhighlight %}
 :key: Output
-	
+
 	From: alice@example.com To: bob@example.com NumParams: 3
-	Params: v1 v2 v3 
+	Params: v1 v2 v3
 
 
 #### 3. Rapidly producing JSON
 Both JSONWriter and JSONStringer allow you to construct a JSON object with JSONWriter additionally taking a Writer object which outputs the contents to a stream.
-{% highlight java linenos %}
+{% highlight java  %}
 private static void constructJSON() throws IOException {
   Writer myWriter = new BufferedWriter(new FileWriter(new File("json.out")));
   new JSONWriter(myWriter)
@@ -111,7 +111,7 @@ private static void constructJSON() throws IOException {
 
 #### 4. Maven dependency
 org.json is available at Maven central repository, just declares following dependency in your pom.xml file.
-{% highlight java linenos %}
+{% highlight java  %}
 <dependency>
   <groupId>org.json</groupId>
   <artifactId>json</artifactId>
@@ -126,7 +126,7 @@ Suppose you had a JSON string that you want to normalize such that you can save 
 
 :point_right: Input:
 
-{% highlight javascript linenos %}
+{% highlight javascript  %}
 {
   "store": {
     "book": [
@@ -170,7 +170,7 @@ Suppose you had a JSON string that you want to normalize such that you can save 
 
 
 Here is the code that can do that.
-{% highlight java linenos %}
+{% highlight java  %}
 import java.util.Iterator;
 
 import org.json.JSONArray;
@@ -227,5 +227,5 @@ public class JSONNormalize {
 {% endhighlight %}
 
 
-#### 5. Performance 
-Comparisons between the various libraries can be found <a href="http://eclipsesource.com/blogs/2013/04/18/minimal-json-parser-for-java/" title="here" target="_blank">here</a> 
+#### 5. Performance
+Comparisons between the various libraries can be found <a href="http://eclipsesource.com/blogs/2013/04/18/minimal-json-parser-for-java/" title="here" target="_blank">here</a>
