@@ -190,8 +190,13 @@ When you run the above example, you get the output from both the LogService impl
     Data [some app data with ExampleThree] at 1545540204711
     {"log": { "message": "some app data with ExampleThree", "timestamp": 1545540204711 } }
 
-Notice how the `stream` API allows us to access all the available dependencies (0 or more).
+Notice how the `stream()` method allows us to access all the available dependencies (0 or more).
+You can even use the `orderedStream()` method to get the beans as defined by `@Ordered` annotation if any of the beans.
 
+API Doc:
+<center><img src="/assets/img/blogs/spring/stream.png"></center>
+
+<br/>
 Try removing all the LogService implementations and the code still works with no output as expected (see `testExampleThreeWithNoLoggers`).
 
 So far, just using ObjectProvider<T>, we are able to handle all the cases where no dependency is available or there are one or more dependencies inside of the bean factory.
@@ -206,6 +211,11 @@ How do you add a fallback mechanism?.
 
 I'll use the previous example where no dependencies of `LogService` exist but I want to fallback to use the `PlainLogger` implementation.
 So in the getLogService method, I use the `getIfUnique` API that allows us to provide a `Supplier` if no unique candidates are available.
+
+API Doc:
+<center><img src="/assets/img/blogs/spring/getifapi.png"></center>
+
+<br/>
 
     public class ExampleFour {
 
@@ -248,7 +258,9 @@ However you may also use the `getIfAvailable` API, but that would blow up (with 
 
 With `getIfUnique`, it works for both the cases where there are no dependencies or more than one. In both cases, the `PlainLogger` will be used. If only one implementation of `LogService` is found, that would be used instead.
 
-
+API Doc:
+<center><img src="/assets/img/blogs/spring/ifAPI.png"></center>
+<br/>
 The following example uses the `ifAvailable` API that allows us to hook in a `Consumer` that takes a bean instance if one if found.
 
     public class ExampleFive {
@@ -261,12 +273,6 @@ The following example uses the `ifAvailable` API that allows us to hook in a `Co
 
       public void runApps() {
         logService.ifAvailable(e -> e.log("some app data with " + getClass().getSimpleName()));
-      }
-
-      public int numDependencies() {
-        int[] count = {0};
-        logService.stream().forEach(e -> count[0]++);
-        return count[0];
       }
     }
 
