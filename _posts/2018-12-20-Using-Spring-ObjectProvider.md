@@ -24,27 +24,30 @@ The code discussed below is available [here](https://github.com/rahulsh1/spring-
 
 ### No dependencies
 Let's say I've this simple Interface for a logging service as given below:
-
-    public interface LogService {
-        void log(String data);
-    }
+{% highlight java %}
+public interface LogService {
+  void log(String data);
+}
+{% endhighlight %}
 
 I am going to use this LogService inside the Spring Bean as shown.
 
-    @Component
-    public class ExampleOne {
+{% highlight java %}
+@Component
+public class ExampleOne {
 
-        private final LogService logService;
+  private final LogService logService;
 
-        @Autowired
-        public ExampleOne(LogService logService) {
-            this.logService = logService;
-        }
+  @Autowired
+  public ExampleOne(LogService logService) {
+    this.logService = logService;
+  }
 
-        public void runApps() {
-            logService.log("some data");
-        }
-    }
+  public void runApps() {
+    logService.log("some data");
+  }
+}
+{% endhighlight %}
 
 The above Spring bean wires in the LogService dependency using constructor-based injection.
 
@@ -52,17 +55,18 @@ You don't really need to mention `@Autowired` as part of the Constructor param a
 
 I'll now wire this up in the following test case and we shall see what happens when there are no dependencies for `LogService`.
 
-    @Test(expected = UnsatisfiedDependencyException.class)
-    public void testExampleOneMissingBean() {
-        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext()) {
-            context.register(ExampleOne.class);
-            context.refresh();
-            context.start();
+{% highlight java %}
+@Test(expected = UnsatisfiedDependencyException.class)
+public void testExampleOneMissingBean() {
+  try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext()) {
+    context.register(ExampleOne.class);
+    context.refresh();
 
-            ExampleOne example = context.getBean(ExampleOne.class);
-            example.runApps();
-        }
-    }
+    ExampleOne example = context.getBean(ExampleOne.class);
+    example.runApps();
+  }
+}
+{% endhighlight %}
 
 Notice that no dependencies of `LogService` were registered with the ApplicationContext. There is only one User defined bean.
 As expected, we get the `NoSuchBeanDefinitionException` for the field logService in `ExampleOne`.
@@ -78,41 +82,45 @@ Let’s see how the `ObjectProvider` can come to our rescue here to handle optio
 
 I'll update the type from `LogService` to `ObjectProvider<LogService>` and also modify the runApps method to use the `ifAvailable` API.
 
-    public class ExampleTwo {
+{% highlight java %}
+public class ExampleTwo {
 
-        private ObjectProvider<LogService> logService;
+  private ObjectProvider<LogService> logService;
 
-        public ExampleTwo(ObjectProvider<LogService> logService) {
-            this.logService = logService;
-        }
+  public ExampleTwo(ObjectProvider<LogService> logService) {
+    this.logService = logService;
+  }
 
-        public void runApps() {
-            logService.ifAvailable(e -> e.log("some data"));
-        }
-    }
+  public void runApps() {
+    logService.ifAvailable(e -> e.log("some data"));
+  }
+}
+{% endhighlight %}
 
 Now when I run the same test as before, we don't get any exception and things are all good. No output is printed as expected.
 
 Let's make sure this works even when a dependency actually exists. To do that, we register the `PlainLogger` bean as well with the ApplicationContext as part of `context.register(...)`.
 
-    @Test
-    public void testExampleTwoWithOneLogger() {
-        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext()) {
-            context.register(ExampleTwo.class, PlainLogger.class);  // Register the dependency
-            context.refresh();
+{% highlight java %}
+@Test
+public void testExampleTwoWithOneLogger() {
+  try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext()) {
+    context.register(ExampleTwo.class, PlainLogger.class);  // Register the dependency
+    context.refresh();
 
-            ExampleTwo example = context.getBean(ExampleTwo.class);
-            example.runApps();
-        }
-    }
+    ExampleTwo example = context.getBean(ExampleTwo.class);
+    example.runApps();
+  }
+}
 
-    // The dependency...
-    public class PlainLogger implements LogService {
-      @Override
-      public void log(String data) {
-        System.out.printf("Data [%s] at %d%n", data, System.currentTimeMillis());
-      }
-    }
+// The dependency...
+public class PlainLogger implements LogService {
+  @Override
+  public void log(String data) {
+    System.out.printf("Data [%s] at %d%n", data, System.currentTimeMillis());
+  }
+}
+{% endhighlight %}
 
 This time I get some output as expected:
 
@@ -126,32 +134,33 @@ Now what happens if there are more than one dependencies of `LogService`, which 
 
 I am registering two implementations here for `LogService`, namely `PlainLogger` and `JsonLogger`.
 
-    @Test
-    public void testExampleTwoWithMultipleLoggers() {
-        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext()) {
-            context.register(ExampleTwo.class, PlainLogger.class, JsonLogger.class);
-            context.refresh();
-            context.start();
+{% highlight java %}
+@Test
+public void testExampleTwoWithMultipleLoggers() {
+  try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext()) {
+    context.register(ExampleTwo.class, PlainLogger.class, JsonLogger.class);
+    context.refresh();
 
-            ExampleTwo example = context.getBean(ExampleTwo.class);
-            example.runApps();
-        }
-    }
+    ExampleTwo example = context.getBean(ExampleTwo.class);
+    example.runApps();
+  }
+}
 
-    // The two dependencies
-    public class PlainLogger implements LogService {
-      @Override
-      public void log(String data) {
-        ...
-      }
-    }
+// The two dependencies
+public class PlainLogger implements LogService {
+  @Override
+  public void log(String data) {
+    ...
+  }
+}
 
-    public class JsonLogger implements LogService {
-      @Override
-      public void log(String data) {
-        System.out.printf("{\"log\": { \"message\": \"%s\", \"timestamp\": %d } }", data, System.currentTimeMillis());
-      }
-    }
+public class JsonLogger implements LogService {
+  @Override
+  public void log(String data) {
+    System.out.printf("{\"log\": { \"message\": \"%s\", \"timestamp\": %d } }", data, System.currentTimeMillis());
+  }
+}
+{% endhighlight %}
 
 This would not work. Notice where this fails though. The wiring is fine though however when calling `runApps` Spring doesn't know which one to choose for you.
 
@@ -166,31 +175,35 @@ We don't need to make changes to the type. The type remains the same, it is stil
 
 However the API to access the beans is a bit different. We use the `stream` API to access the dependencies. We could have used an enhanced for loop as well since the `ObjectProvider` interface extends `Iterable`. See the updated implementation of `runApps`
 
-    public class ExampleThree {
+{% highlight java %}
+public class ExampleThree {
 
-        private ObjectProvider<LogService> logService;
+  private ObjectProvider<LogService> logService;
 
-        public ExampleThree(ObjectProvider<LogService> logService) {
-            this.logService = logService;
-        }
+  public ExampleThree(ObjectProvider<LogService> logService) {
+    this.logService = logService;
+  }
 
-        public void runApps() {
-            logService.stream().forEach(e -> e.log("some app data with " + getClass().getSimpleName()));
-        }
-    }
+  public void runApps() {
+    logService.stream().forEach(e -> e.log("some app data with " + getClass().getSimpleName()));
+  }
+}
+{% endhighlight %}
 
 Let's test this out.
 
-    public void testExampleThreeWithMultipleLoggers() {
-        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext()) {
-            context.register(ExampleThree.class, PlainLogger.class, JsonLogger.class);
-            context.refresh();
-            context.start();
+{% highlight java %}
+@Test
+public void testExampleThreeWithMultipleLoggers() {
+  try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext()) {
+    context.register(ExampleThree.class, PlainLogger.class, JsonLogger.class);
+    context.refresh();
 
-            ExampleThree example = context.getBean(ExampleThree.class);
-            example.runApps();
-        }
-    }
+    ExampleThree example = context.getBean(ExampleThree.class);
+    example.runApps();
+  }
+}
+{% endhighlight %}
 
 When you run the above example, you get the output from both the LogService implementations.
 
@@ -218,7 +231,7 @@ How do you add a fallback mechanism?.
 
 #### getIfAvailable/getIfUnique
 I'll use the previous example where no dependencies of `LogService` exist but it should fallback to use the `PlainLogger` implementation.
-So in the getLogService method, I use the `getIfAvailable` API that allows us to provide a `Supplier` if no candidates are available.
+
 
 API Doc:
 <center><a href="https://docs.spring.io/spring/docs/5.1.0.BUILD-SNAPSHOT/javadoc-api/org/springframework/beans/factory/ObjectProvider.html" target="_blank">
@@ -226,36 +239,42 @@ API Doc:
 
 <br/>
 
-    public class ExampleFour {
+In the getLogService method of the following example, I use the `getIfAvailable` API that allows us to provide a `Supplier` if no candidates are available.
 
-        private ObjectProvider<LogService> logService;
+{% highlight java %}
+public class ExampleFour {
 
-        public ExampleFour(ObjectProvider<LogService> logService) {
-            this.logService = logService;
-        }
+  private ObjectProvider<LogService> logService;
 
-        LogService getLogService() {
-            // use PlainLogger if not available.
-            return logService.getIfAvailable(PlainLogger::new);
-        }
+  public ExampleFour(ObjectProvider<LogService> logService) {
+    this.logService = logService;
+  }
 
-        public void runApps() {
-            ...
-        }
-    }
+  LogService getLogService() {
+    // use PlainLogger if not available.
+    return logService.getIfAvailable(PlainLogger::new);
+  }
+
+  public void runApps() {
+    ...
+  }
+}
+{% endhighlight %}
 
 Let's run with no dependencies while also invoking the `getLogService()` on the ExampleFour bean.
 
-    public void testExampleFourWithNoLoggers() {
-        try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext()) {
-            context.register(ExampleFour.class);
-            context.refresh();
-            context.start();
+{% highlight java %}
+@Test
+public void testExampleFourWithNoLoggers() {
+  try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext()) {
+    context.register(ExampleFour.class);
+    context.refresh();
 
-            ExampleFour example = context.getBean(ExampleFour.class);
-            example.getLogService().log("Running ExampleFour");
-        }
-    }
+    ExampleFour example = context.getBean(ExampleFour.class);
+    example.getLogService().log("Running ExampleFour");
+  }
+}
+{% endhighlight %}
 
 We get the output from the `PlainLogger` in this case.
 
@@ -271,40 +290,40 @@ This would blow up (with NoUniqueBeanDefinitionException) since Spring cannot de
 Rather we can use the `getIfUnique` API. It works for all the cases where there are no dependencies, one or more than one.
 So when there are none or more than one dependencies, the fallback `PlainLogger` will be used. However if only one implementation of `LogService` is found, that would be used instead.
 
-
-
 #### ifAvailable/ifUnique
 
-The following example uses the `ifAvailable` API that allows you to hook in a `Consumer` that accepts a bean instance if a dependency for the given type is found.
 
 API Doc:
 <center><a href="https://docs.spring.io/spring/docs/5.1.0.BUILD-SNAPSHOT/javadoc-api/org/springframework/beans/factory/ObjectProvider.html" target="_blank"><img src="/assets/img/blogs/spring/ifAPI.png"></a></center>
 
 <br/>
+The following example uses the `ifAvailable` API that allows you to hook in a `Consumer` that accepts a bean instance if a dependency for the given type is found.
 
-    public class ExampleFive {
+{% highlight java %}
+public class ExampleFive {
 
-      private final ObjectProvider<LogService> logService;
+  private final ObjectProvider<LogService> logService;
 
-      public ExampleFive(ObjectProvider<LogService> logService) {
-        this.logService = logService;
-      }
+  public ExampleFive(ObjectProvider<LogService> logService) {
+    this.logService = logService;
+  }
 
-      public void runApps() {
-        logService.ifAvailable(e -> e.log("some app data with " + getClass().getSimpleName()));
-      }
-    }
+  public void runApps() {
+    logService.ifAvailable(e -> e.log("some app data with " + getClass().getSimpleName()));
+  }
+}
 
-    @Test
-    public void testExampleFiveWithOneLogger() {
-      try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext()) {
-        context.register(ExampleFive.class, JsonLogger.class);
-        context.refresh();
+@Test
+public void testExampleFiveWithOneLogger() {
+  try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext()) {
+    context.register(ExampleFive.class, JsonLogger.class);
+    context.refresh();
 
-        ExampleFive example = context.getBean(ExampleFive.class);
-        example.runApps();
-      }
-    }
+    ExampleFive example = context.getBean(ExampleFive.class);
+    example.runApps();
+  }
+}
+{% endhighlight %}
 
 When the `runApps` method is invoked, if a dependency is found, then the consumer is fired otherwise nothing happens. In the test above, you should see the output from the `JsonLogger`.
 
