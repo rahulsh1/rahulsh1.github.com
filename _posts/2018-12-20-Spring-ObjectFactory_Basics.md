@@ -10,11 +10,11 @@ published: true
 summary: Using Spring's ObjectProvider to retrieve a bean only if it actually exists or if a single candidate can be determined using programmatic resolution. With Iterable and Stream support added in 5.1, we can easily support cases (with the same code) when zero or more dependencies exist for the bean of a given type.
 ---
 
-When Spring Framework 4.3 was released, it introduced `ObjectProvider`. As Spring's blog [1] mentions, this provided an extension to the existing `ObjectFactory` interface with handy signatures such as getIfAvailable, getIfUnique etc to retrieve a bean only if it actually exists or if a single candidate can be determined (such as a primary candidate in case of multiple matching beans). This also improved the programmatic resolution of dependencies.
+When Spring Framework 4.3 was released, it introduced [ObjectProvider](https://docs.spring.io/spring/docs/5.1.0.BUILD-SNAPSHOT/javadoc-api/org/springframework/beans/factory/ObjectProvider.html). As Spring's blog [[1](#references)] mentions, this provided an extension to the existing [ObjectFactory](https://docs.spring.io/spring/docs/5.1.0.BUILD-SNAPSHOT/javadoc-api/org/springframework/beans/factory/ObjectFactory.html) interface with handy signatures such as getIfAvailable, getIfUnique etc to retrieve a bean only if it actually exists or if a single candidate can be determined (such as a primary candidate in case of multiple matching beans). This also improved the programmatic resolution of dependencies.
 
-With 5.0 release, this was improved to support newer APIs that allowed you to pass a `Supplier` for the getIfAvailable/getIfUnique APIs and a `Consumer` for the ifAvailable/ifUnique APIs.
+With 5.0 release, this has been improved to support newer APIs that allows you to pass a `Supplier` for the getIfAvailable/getIfUnique APIs and a `Consumer` for the ifAvailable/ifUnique APIs.
 
-And with 5.1 release, this was extended further to give it `Iterable` and `Stream` support [2].
+And with 5.1 release, this has been further extended to give it `Iterable` and `Stream` support [[2](#references)].
 
 
 ## Diving into ObjectProvider
@@ -100,11 +100,18 @@ Let's make sure this works even when a dependency actually exists. To do that, w
         try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext()) {
             context.register(ExampleTwo.class, PlainLogger.class);  // Register the dependency
             context.refresh();
-            context.start();
 
             ExampleTwo example = context.getBean(ExampleTwo.class);
             example.runApps();
         }
+    }
+
+    // The dependency...
+    public class PlainLogger implements LogService {
+      @Override
+      public void log(String data) {
+        System.out.printf("Data [%s] at %d%n", data, System.currentTimeMillis());
+      }
     }
 
 This time I get some output as expected:
@@ -142,7 +149,7 @@ I am registering two implementations here for `LogService`, namely `PlainLogger`
     public class JsonLogger implements LogService {
       @Override
       public void log(String data) {
-        ...
+        System.out.printf("{\"log\": { \"message\": \"%s\", \"timestamp\": %d } }", data, System.currentTimeMillis());
       }
     }
 
@@ -151,7 +158,7 @@ This would not work. Notice where this fails though. The wiring is fine though h
 Since Spring cannot decide which specific implementation you want (and neither bean is marked as `@Primary` too), this would throw an expection.
 > org.springframework.beans.factory.NoUniqueBeanDefinitionException: No qualifying bean of type 'com.example.service.LogService' available: expected single matching bean but found 2: plainLogger,jsonLogger
 
-One fix for above would be to mark of the implementations as `@Primary`. But what if you needed both the implementations?
+One fix for above would be to mark one of the implementations as `@Primary`. But what if you needed both the implementations?
 
 To do that, I'll now use the API introduced in 5.1 for this (this is not supported pre-5.1 though).
 
@@ -191,10 +198,10 @@ When you run the above example, you get the output from both the LogService impl
     {"log": { "message": "some app data with ExampleThree", "timestamp": 1545540204711 } }
 
 Notice how the `stream()` method allows us to access all the available dependencies (0 or more).
-You can even use the `orderedStream()` method to get the beans as defined by `@Ordered` annotation if any of the beans.
+You can even use the `orderedStream()` method to get the beans as defined by the order using `@Order` annotation on the beans.
 
 API Doc:
-<center><img src="/assets/img/blogs/spring/stream.png"></center>
+<center><a href="https://docs.spring.io/spring/docs/5.1.0.BUILD-SNAPSHOT/javadoc-api/org/springframework/beans/factory/ObjectProvider.html" target="_blank"><img src="/assets/img/blogs/spring/stream.png"></a></center>
 
 <br/>
 Try removing all the LogService implementations and the code still works with no output as expected (see `testExampleThreeWithNoLoggers`).
@@ -209,11 +216,13 @@ Lets dive into examples covering the 5.0 API.
 Imagine if you have an application where you want to provide a default implementation programmatically when no dependencies are available for certain types.
 How do you add a fallback mechanism?.
 
-I'll use the previous example where no dependencies of `LogService` exist but I want to fallback to use the `PlainLogger` implementation.
-So in the getLogService method, I use the `getIfUnique` API that allows us to provide a `Supplier` if no unique candidates are available.
+#### getIfAvailable/getIfUnique
+I'll use the previous example where no dependencies of `LogService` exist but it should fallback to use the `PlainLogger` implementation.
+So in the getLogService method, I use the `getIfAvailable` API that allows us to provide a `Supplier` if no candidates are available.
 
 API Doc:
-<center><img src="/assets/img/blogs/spring/getifapi.png"></center>
+<center><a href="https://docs.spring.io/spring/docs/5.1.0.BUILD-SNAPSHOT/javadoc-api/org/springframework/beans/factory/ObjectProvider.html" target="_blank">
+<img src="/assets/img/blogs/spring/getifapi.png"></a></center>
 
 <br/>
 
@@ -226,16 +235,16 @@ API Doc:
         }
 
         LogService getLogService() {
-            // use PlainLogger if not unique.
-            return logService.getIfUnique(PlainLogger::new);
+            // use PlainLogger if not available.
+            return logService.getIfAvailable(PlainLogger::new);
         }
 
         public void runApps() {
-            logService.stream().forEach(e -> e.log("some app data with " + getClass().getSimpleName()));
+            ...
         }
     }
 
-Let's run with no dependencies.
+Let's run with no dependencies while also invoking the `getLogService()` on the ExampleFour bean.
 
     public void testExampleFourWithNoLoggers() {
         try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext()) {
@@ -244,24 +253,34 @@ Let's run with no dependencies.
             context.start();
 
             ExampleFour example = context.getBean(ExampleFour.class);
-            example.getLogService().log("Hello Logger");
+            example.getLogService().log("Running ExampleFour");
         }
     }
 
 We get the output from the `PlainLogger` in this case.
 
-    Data [Hello Logger] at 1545540354820
+    Data [Running ExampleFour] at 1545540354820
 
-Note that I've used the `getIfUnique` API and not the `getIfAvailable` API.
 
-However you may also use the `getIfAvailable` API, but that would blow up (with NoUniqueBeanDefinitionException) when more than one dependencies are found.
+An astute reader might notice the issue here with using the `getIfAvailable` API.
 
-With `getIfUnique`, it works for both the cases where there are no dependencies or more than one. In both cases, the `PlainLogger` will be used. If only one implementation of `LogService` is found, that would be used instead.
+What would happen when there are more than one implementations?
+
+This would blow up (with NoUniqueBeanDefinitionException) since Spring cannot decide which one you need unless one of them is marked @Primary.
+
+Rather we can use the `getIfUnique` API. It works for all the cases where there are no dependencies, one or more than one.
+So when there are none or more than one dependencies, the fallback `PlainLogger` will be used. However if only one implementation of `LogService` is found, that would be used instead.
+
+
+
+#### ifAvailable/ifUnique
+
+The following example uses the `ifAvailable` API that allows you to hook in a `Consumer` that accepts a bean instance if a dependency for the given type is found.
 
 API Doc:
-<center><img src="/assets/img/blogs/spring/ifAPI.png"></center>
+<center><a href="https://docs.spring.io/spring/docs/5.1.0.BUILD-SNAPSHOT/javadoc-api/org/springframework/beans/factory/ObjectProvider.html" target="_blank"><img src="/assets/img/blogs/spring/ifAPI.png"></a></center>
+
 <br/>
-The following example uses the `ifAvailable` API that allows us to hook in a `Consumer` that takes a bean instance if one if found.
 
     public class ExampleFive {
 
@@ -276,16 +295,30 @@ The following example uses the `ifAvailable` API that allows us to hook in a `Co
       }
     }
 
-When the `runApps` method is invoked, if a dependency is found, then the consumer is fired otherwise nothing happens. You can also use the `ifUnique` API that also takes in a `Consumer`.
+    @Test
+    public void testExampleFiveWithOneLogger() {
+      try (AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext()) {
+        context.register(ExampleFive.class, JsonLogger.class);
+        context.refresh();
+
+        ExampleFive example = context.getBean(ExampleFive.class);
+        example.runApps();
+      }
+    }
+
+When the `runApps` method is invoked, if a dependency is found, then the consumer is fired otherwise nothing happens. In the test above, you should see the output from the `JsonLogger`.
+
+You can similarly use the `ifUnique` API that also takes in a `Consumer`. This comes in handy to support all cases as explained in the earlier scenario with `getIfUnique`.
+
 
 ## Summary
 That wraps up the basic use-cases for ObjectProvider.
 You can use it to retrieve a bean only if it actually exists or if a single candidate can be determined using programmatic resolution without blowing up at the wiring phase or while using the bean instances.
 With Iterable and Stream support added in 5.1, we can easily support cases (with the same code) when zero or more dependencies exist for the bean of a given type.
 
-The above example code is available [here](https://github.com/rahulsh1/spring-objectprovider-examples)
+The above code samples are available [here](https://github.com/rahulsh1/spring-objectprovider-examples)
 
-## References
+## References <a name="references"></a>
 [1] [Spring Framework 4.3 Core Updates](https://spring.io/blog/2016/03/04/core-container-refinements-in-spring-framework-4-3)
 
 [2] [Spring Framework 5.1 Core Updates](https://spring.io/blog/2018/07/26/spring-framework-5-1-goes-rc1)
