@@ -18,7 +18,7 @@ And with 5.1 release, this has been further extended to give it `Iterable` and `
 
 
 ## Diving into ObjectProvider
-Let's take a look at the things you can do with ObjectProvider. We'll dive into the simple usecases first and then cover the newer APIs too.
+Let's take a look at the things you can do with ObjectProvider. We'll dive into the simple use-cases first and then cover the newer APIs too.
 
 The code discussed below is available [here](https://github.com/rahulsh1/spring-objectprovider-examples).
 
@@ -164,7 +164,7 @@ public class JsonLogger implements LogService {
 
 This would not work. Notice where this fails though. The wiring is fine though however when calling `runApps` Spring doesn't know which one to choose for you.
 
-Since Spring cannot decide which specific implementation you want (and neither bean is marked as `@Primary` too), this would throw an expection.
+Since Spring cannot decide which specific implementation you want (and neither bean is marked as `@Primary` too), this would throw an exception.
 > org.springframework.beans.factory.NoUniqueBeanDefinitionException: No qualifying bean of type 'com.example.service.LogService' available: expected single matching bean but found 2: plainLogger,jsonLogger
 
 One fix for above would be to mark one of the implementations as `@Primary`. But what if you needed both the implementations?
@@ -256,12 +256,12 @@ public class ExampleFour {
   }
 
   public void runApps() {
-    ...
+    getLogService().log("some app data with " + getClass().getSimpleName());
   }
 }
 {% endhighlight %}
 
-Let's run with no dependencies while also invoking the `getLogService()` on the ExampleFour bean.
+Let's run with no dependencies that invokes the `getLogService()` on the ExampleFour bean.
 
 {% highlight java %}
 @Test
@@ -271,15 +271,14 @@ public void testExampleFourWithNoLoggers() {
     context.refresh();
 
     ExampleFour example = context.getBean(ExampleFour.class);
-    example.getLogService().log("Running ExampleFour");
+    example.runApps();
   }
 }
 {% endhighlight %}
 
 We get the output from the `PlainLogger` in this case.
 
-    Data [Running ExampleFour] at 1545540354820
-
+    Data [some app data with ExampleFour] at 1545540354820
 
 An astute reader might notice the issue here with using the `getIfAvailable` API.
 
