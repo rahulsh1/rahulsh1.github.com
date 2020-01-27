@@ -32,25 +32,25 @@ Note that a new version of the AWS Certified Solutions Architect - Associate exa
 ### Exam Study Resources
 
 #### PluralSight
-I started with PluralSight Course [AWS Certified Solutions Architect - Associate](https://app.pluralsight.com/paths/certificate/aws-certified-solutions-architect-associate). This is 20+ hours of videos. You can watch these at 1.2x speed.
-While they cover a good set of AWS services and labs, they do not cover in sufficient depth that is needed for the exam.
-The last course "Demystifying the AWS Certified Solutions Architect: Associate Exam" does focus on the exam topics at a high level and how to prepare.
+I started with PluralSight Course [AWS Certified Solutions Architect - Associate](https://app.pluralsight.com/paths/certificate/aws-certified-solutions-architect-associate). This is six courses total with total 20 hours of videos. You can watch these at 1.2x speed.
+While they cover a good set of AWS services and labs at a high level, this does not cover in sufficient depth that is needed for the exam.
+The last course `Demystifying the AWS Certified Solutions Architect: Associate Exam` does focus on the exam topics at a high level and how to prepare.
 
 #### Udemy
-To gather some more ground, I took following two Udemy courses:
+To gather some more ground, I took the following two Udemy courses:
 1. [AWS Certified Solutions Architect - Associate 2020](https://www.udemy.com/course/aws-certified-solutions-architect-associate/) by  Ryan Kroonenburg.
-  This is 13 hours and has 2 Practice Tests. While some of the topics are covered well, it lacks details on some of the more advanced topics like Redshift, CloudFront, AWS Interconnects.
+  This is 13 hours total and has 2 Practice Tests. While some of the topics are covered well, it lacks details on some of the more advanced topics like Redshift, CloudFront, AWS Interconnects and such. However if you are new to AWS, this one is good to begin with. Topics such as VPC is covered really well.
 
 2. [Ultimate AWS Certified Solutions Architect Associate 2020](https://www.udemy.com/course/aws-certified-solutions-architect-associate-saa-c01/) by Stephane Maarek.
-  This is 18.5 hours and has 1 Practice test. This is by far the most extensive course and has good coverage overall with focus on the exam. There are these architecture discussion videos which can you help in understanding the big picture and how these services all come together.
+  This is 18.5 hours total and has 1 Practice test. This is by far the most extensive course and has good coverage overall with focus on the exam. There are these architecture discussion videos which can help in understanding the big picture and how these services all come together.
 
 #### QwikLabs
-These are good for some hands-on lab to solidify your understanding and gain more experience with AWS services.
+These are good for some hands-on lab to solidify your understanding and gain more expertise with AWS services.
 
 > The above material (if you know these very well) can get you close to 60-70% of what is needed for the exam.
 
 #### AWS Resources
-AWS has a ton of resources and it is easy to get lost in the documentation hole. From an exam point of view, the FAQs have a lot of info not covered anywhere else.
+AWS has a ton of resources and it is easy to get lost in this documentation hole. From an exam point of view, the FAQs have a lot of info not covered anywhere else.
 
 Start with the [FAQ Site](https://aws.amazon.com/faqs/). Some of these are really long and can take some time to go through.
 
@@ -73,16 +73,16 @@ Also there are these additional resources - some I read the entire paper and som
 
 ### Practice Exams
 
-AWS has a exam readiness course. You can take this even before you begin with the course material. That can give you some insight on how the questions will be.
+AWS has an exam readiness course. You can take this even before you begin with the course material. That can give you some insight on how the questions will be.
 See [Exam Readiness: AWS Certified Solutions Architect – Associate (Digital)](https://www.aws.training/Details/Curriculum?id=20685)
 
-Also this [Practice exam](https://www.udemy.com/course/aws-certified-solutions-architect-associate-amazon-practice-exams/) from Udemy by Jon Bonso and Tutorials Dojo is the one I took after reading a bunch of reviews. I learned a lot from the explanations and the additional links given in the answers.
+Also this [Practice exam](https://www.udemy.com/course/aws-certified-solutions-architect-associate-amazon-practice-exams/) from Udemy by Jon Bonso and Tutorials Dojo is the one I took after reading a bunch of reviews. I learned a lot from the explanations and the additional links given in the answers. There are six practice exams.
 
-Definitely take the practice exam offered by AWS as this will help you get familiar with the UI for the final exam and the pattern for the questions.
+Also definitely take the practice exam offered by AWS (cost $20) as this will help you get familiar with the UI for the final exam and the pattern for the questions.
 
 ### Exam Tips
 Some tips that may help you crack the exam:
-- Read the Questions carefully for what is being asked. Some focus on scalability, availablity, cost and some others.
+- Read the Questions carefully for what is being asked. Your answer may vary depending on whether the focus is scalability, availablity, cost, minimal change or something else.
 - Read all the answers even if you think you got the right one
 - Eliminate the ones which are wrong answers first
 - If unsure, pick answers from what you know
@@ -99,5 +99,7 @@ While the exam focuses on your ability to pick the correct solution as an archit
 - Is there a newer simpler solution to handle this?
 
 You should be able to understand all the AWS services covered and be able to reason why one solution is good over another.
+Planning is the key to the exam as there are a lot of topics to cover along with things you need to revise before the exam.
+Be well rested. Just mark the questions if you do not know the answer but do take a guess.
 
 Till then... :metal:
